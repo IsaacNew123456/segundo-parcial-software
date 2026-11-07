@@ -1,0 +1,99 @@
+<div class="flex flex-col h-full bg-slate-950 text-slate-100 select-none overflow-hidden">
+  
+  <!-- Chat Header -->
+  <div class="px-4 py-3 border-b border-slate-800 bg-slate-900/70 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-2.5 h-2.5 rounded-full" [ngClass]="chatSocket.isConnected() ? 'bg-emerald-400 animate-pulse' : 'bg-rose-500'"></div>
+      <div>
+        <h4 class="text-xs font-bold font-['Outfit'] text-white">Chat del Proyecto</h4>
+        <span class="text-[9px] text-slate-400 font-mono">
+          {{ chatSocket.isConnected() ? 'En Línea' : 'Desconectado' }}
+        </span>
+      </div>
+    </div>
+
+    <span *ngIf="chatSocket.currentUserInfo() as me" class="text-[10px] px-2 py-0.5 rounded-md bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 font-mono">
+      {{ me.rol === 'designer' ? 'Diseñador' : (me.rol === 'collaborator' ? 'Colaborador' : 'Espectador') }}
+    </span>
+  </div>
+
+  <!-- Messages List -->
+  <div #messagesContainer class="flex-1 overflow-y-auto p-4 space-y-3 custom-scrollbar">
+    
+    <div *ngIf="chatSocket.messages().length === 0" class="h-full flex flex-col items-center justify-center text-center p-4 text-slate-500">
+      <svg class="w-8 h-8 text-slate-600 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+      </svg>
+      <span class="text-xs">No hay mensajes aún en este proyecto.</span>
+      <span class="text-[10px] text-slate-600 mt-0.5">Envía un mensaje para comenzar a colaborar.</span>
+    </div>
+
+    <div *ngFor="let msg of chatSocket.messages()" 
+      class="flex flex-col gap-1 p-2.5 rounded-xl transition text-xs"
+      [ngClass]="{
+        'bg-indigo-950/40 border border-indigo-500/30 ml-2': msg.author_id === authService.currentUser()?.id,
+        'bg-purple-950/40 border border-purple-500/30': msg.author_type === 'ai',
+        'bg-slate-900/80 border border-slate-800 mr-2': msg.author_id !== authService.currentUser()?.id && msg.author_type !== 'ai'
+      }">
+      
+      <!-- Message Header: Author & Time -->
+      <div class="flex items-center justify-between text-[10px]">
+        <div class="flex items-center gap-1.5 font-bold">
+          <span [ngClass]="msg.author_type === 'ai' ? 'text-purple-300 font-mono' : 'text-slate-300'">
+            {{ msg.author_type === 'ai' ? '🤖 IA Moderadora' : msg.author_name }}
+          </span>
+          <span *ngIf="msg.author_id === authService.currentUser()?.id" class="text-[9px] text-indigo-400 font-mono">(Tú)</span>
+        </div>
+        <span class="text-[9px] text-slate-500 font-mono">
+          {{ msg.created_at | date:'HH:mm' }}
+        </span>
+      </div>
+
+      <!-- Message Content -->
+      <div class="text-slate-200 leading-relaxed break-words whitespace-pre-wrap select-text">
+        {{ msg.content }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Quick Action Chips -->
+  <div class="px-3 pt-2 pb-1 border-t border-slate-800/80 bg-slate-900/40 flex items-center gap-1.5 overflow-x-auto custom-scrollbar text-[10px]">
+    <button type="button" (click)="messageText.set('@ia resume el lienzo')" class="px-2 py-0.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 shrink-0 transition cursor-pointer">
+      📌 Resumen
+    </button>
+    <button type="button" (click)="messageText.set('@ia audita normalizacion')" class="px-2 py-0.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 shrink-0 transition cursor-pointer">
+      📊 Normalizar (1FN-4FN)
+    </button>
+    <button type="button" (click)="messageText.set('@ia sugiere relaciones')" class="px-2 py-0.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 shrink-0 transition cursor-pointer">
+      💡 Sugerir
+    </button>
+    <button type="button" (click)="messageText.set('@ia revisa las relaciones')" class="px-2 py-0.5 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 border border-slate-700/60 shrink-0 transition cursor-pointer">
+      🔍 Revisar
+    </button>
+  </div>
+
+  <!-- Input Area -->
+  <div class="p-3 border-t border-slate-800 bg-slate-900/70">
+    <form (ngSubmit)="sendMessage()" class="flex items-center gap-2">
+      <input 
+        type="text" 
+        [ngModel]="messageText()"
+        (ngModelChange)="messageText.set($event)"
+        name="chatInput"
+        placeholder="Escribe un mensaje al grupo (ej: @ia resume el lienzo)..."
+        class="flex-1 px-3 py-2 rounded-xl bg-slate-950/80 border border-slate-750 focus:border-indigo-500 text-xs text-slate-100 placeholder-slate-500 outline-none transition" />
+
+      <button 
+        type="submit" 
+        [disabled]="!messageText().trim()"
+        class="p-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 disabled:opacity-40 disabled:hover:bg-indigo-600 text-white transition cursor-pointer shadow-md shadow-indigo-600/30">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+        </svg>
+      </button>
+    </form>
+  </div>
+
+</div>

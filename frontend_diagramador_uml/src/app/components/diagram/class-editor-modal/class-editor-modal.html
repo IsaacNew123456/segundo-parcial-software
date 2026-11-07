@@ -1,0 +1,392 @@
+<!-- Modal Overlay Backdrop -->
+<div *ngIf="isOpen()" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-[100] flex items-center justify-center p-3 sm:p-5 font-sans select-none animate-fadeIn">
+  
+  <!-- Modal Card -->
+  <div class="w-full max-w-2xl bg-slate-900 border border-slate-700/80 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-scaleUp text-slate-100">
+    
+    <!-- 1. Encabezado del Modal -->
+    <div class="px-6 py-4 bg-slate-900/90 border-b border-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center text-indigo-400 shadow-inner"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6z" /></svg></div>
+        <div>
+          <h3 class="text-base font-bold text-white tracking-wide font-['Outfit'] flex items-center gap-2">
+            Propiedades de Clase UML
+            <span class="text-[11px] font-mono font-medium px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              CASE Studio
+            </span>
+          </h3>
+          <p class="text-xs text-slate-400">Gestión asistida de atributos, visibilidad, tipos de datos y operaciones</p>
+        </div>
+      </div>
+      
+      <button (click)="closeModal()" title="Cerrar" class="w-8 h-8 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center text-base font-bold transition cursor-pointer">&times;</button>
+    </div>
+
+    <!-- 2. Barra de Nombre de la Clase -->
+    <div class="px-6 py-3.5 bg-slate-800/40 border-b border-slate-800/80 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+      <label class="text-xs font-semibold text-slate-300 uppercase tracking-wider min-w-[120px]">
+        Nombre Entidad:
+      </label>
+      <div class="flex-1 relative">
+        <input 
+          type="text" 
+          [ngModel]="className()"
+          (ngModelChange)="className.set($event)"
+          placeholder="Ej: Cliente, DetalleVenta, Producto"
+          class="w-full px-3.5 py-1.5 rounded-xl bg-slate-950 border border-slate-700 text-white font-semibold text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition font-['Outfit']" />
+      </div>
+    </div>
+
+    <!-- 3. Selector de Pestañas -->
+    <div class="px-6 pt-3 bg-slate-900 border-b border-slate-800 flex items-center gap-2">
+      <button 
+        (click)="activeTab.set('attrs')"
+        [class.border-indigo-500]="activeTab() === 'attrs'"
+        [class.text-indigo-400]="activeTab() === 'attrs'"
+        [class.border-transparent]="activeTab() !== 'attrs'"
+        [class.text-slate-400]="activeTab() !== 'attrs'"
+        class="pb-2.5 px-3 border-b-2 text-xs font-bold transition flex items-center gap-2 cursor-pointer hover:text-slate-200">
+        <span>Atributos</span>
+        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" 
+          [class.bg-indigo-500/20]="activeTab() === 'attrs'"
+          [class.text-indigo-300]="activeTab() === 'attrs'"
+          [class.bg-slate-800]="activeTab() !== 'attrs'">
+          {{ attributes().length }}
+        </span>
+      </button>
+
+      <button 
+        (click)="activeTab.set('methods')"
+        [class.border-indigo-500]="activeTab() === 'methods'"
+        [class.text-indigo-400]="activeTab() === 'methods'"
+        [class.border-transparent]="activeTab() !== 'methods'"
+        [class.text-slate-400]="activeTab() !== 'methods'"
+        class="pb-2.5 px-3 border-b-2 text-xs font-bold transition flex items-center gap-2 cursor-pointer hover:text-slate-200">
+        <span>Métodos / Operaciones</span>
+        <span class="px-1.5 py-0.2 rounded-full text-[10px] font-mono" 
+          [class.bg-indigo-500/20]="activeTab() === 'methods'"
+          [class.text-indigo-300]="activeTab() === 'methods'"
+          [class.bg-slate-800]="activeTab() !== 'methods'">
+          {{ methods().length }}
+        </span>
+      </button>
+
+      <button 
+        (click)="activeTab.set('preview')"
+        [class.border-indigo-500]="activeTab() === 'preview'"
+        [class.text-indigo-400]="activeTab() === 'preview'"
+        [class.border-transparent]="activeTab() !== 'preview'"
+        [class.text-slate-400]="activeTab() !== 'preview'"
+        class="pb-2.5 px-3 border-b-2 text-xs font-bold transition flex items-center gap-1.5 cursor-pointer hover:text-slate-200">
+        <span>Vista Previa</span>
+      </button>
+    </div>
+
+    <!-- 4. Cuerpo con Scroll -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-5 custom-scroll">
+      
+      <!-- =================================================================== -->
+      <!-- PESTAÑA 1: ATRIBUTOS                                                -->
+      <!-- =================================================================== -->
+      <div *ngIf="activeTab() === 'attrs'" class="space-y-4">
+        
+        <!-- Formulario para Agregar/Modificar Atributo -->
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>{{ attrEditingId() ? 'Modificar Atributo' : 'Añadir Atributo' }}</span>
+            </span>
+            <button 
+              *ngIf="attrEditingId()" 
+              (click)="resetAttrForm()"
+              class="text-[11px] text-slate-400 hover:text-white underline cursor-pointer">
+              Cancelar edición
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-end">
+            <!-- Visibilidad Dropdown -->
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Visibilidad</label>
+              <select 
+                [ngModel]="attrVisibility()"
+                (ngModelChange)="attrVisibility.set($event)"
+                class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-mono outline-none focus:border-indigo-500 cursor-pointer">
+                <option *ngFor="let v of VISIBILITIES" [value]="v.symbol">{{ v.label }}</option>
+              </select>
+            </div>
+
+            <!-- Nombre Input -->
+            <div class="sm:col-span-5">
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Nombre Campo</label>
+              <input 
+                type="text" 
+                [ngModel]="attrName()"
+                (ngModelChange)="attrName.set($event)"
+                (keydown.enter)="saveAttribute()"
+                placeholder="ej: id, nombre, precio"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-mono outline-none focus:border-indigo-500" />
+            </div>
+
+            <!-- Tipo de Dato Dropdown -->
+            <div class="sm:col-span-4">
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Tipo de Dato</label>
+              <select 
+                [ngModel]="attrType()"
+                (ngModelChange)="attrType.set($event)"
+                class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-mono outline-none focus:border-indigo-500 cursor-pointer">
+                <option *ngFor="let t of DATA_TYPES" [value]="t.value">{{ t.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-1">
+            <button 
+              (click)="saveAttribute()"
+              [disabled]="!attrName().trim()"
+              class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/20">
+              <span>{{ attrEditingId() ? 'Guardar Modificación' : 'Añadir a la Clase' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de Atributos Actuales -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between px-1">
+            <span>Atributos Actuales ({{ attributes().length }})</span>
+            <span class="text-[10px] text-slate-500 font-normal">El atributo 'id' o primer campo compatible se usará como clave primaria</span>
+          </div>
+
+          <div *ngIf="attributes().length === 0" class="p-6 text-center rounded-xl border border-dashed border-slate-800 text-slate-500 text-xs">
+            No hay atributos definidos. Usa el formulario superior para añadir campos.
+          </div>
+
+          <div *ngFor="let a of attributes(); let i = index" 
+            class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-3 transition"
+            [class.ring-1]="attrEditingId() === a.id"
+            [class.ring-indigo-500]="attrEditingId() === a.id">
+            
+            <div class="flex items-center gap-2.5 overflow-hidden">
+              <!-- Badge Visibilidad -->
+              <span class="w-6 h-6 rounded-md flex items-center justify-center text-xs font-mono font-bold"
+                [class.bg-emerald-500/20]="a.visibility === '+'"
+                [class.text-emerald-400]="a.visibility === '+'"
+                [class.bg-rose-500/20]="a.visibility === '-'"
+                [class.text-rose-400]="a.visibility === '-'"
+                [class.bg-amber-500/20]="a.visibility === '#'"
+                [class.text-amber-400]="a.visibility === '#'"
+                [class.bg-blue-500/20]="a.visibility === '~'"
+                [class.text-blue-400]="a.visibility === '~'">
+                {{ a.visibility }}
+              </span>
+
+              <!-- Nombre -->
+              <span class="font-mono text-xs font-bold text-slate-200">{{ a.name }}</span>
+              <span class="text-slate-500 text-xs">:</span>
+
+              <!-- Badge Tipo -->
+              <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-indigo-300 font-mono text-[11px]">
+                {{ a.type }}
+              </span>
+
+              <!-- Indicador de PK -->
+              <span *ngIf="a.id === primaryKeyAttrId()" 
+                class="px-1.5 py-0.2 rounded bg-amber-500/20 border border-amber-500/30 text-amber-300 text-[10px] font-bold"
+                title="Clave Primaria (PK)">PK</span>
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex items-center gap-1">
+              <button (click)="moveAttribute(i, 'up')" [disabled]="i === 0" title="Mover arriba" class="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white disabled:opacity-20 cursor-pointer text-xs">&uarr;</button>
+              <button (click)="moveAttribute(i, 'down')" [disabled]="i === attributes().length - 1" title="Mover abajo" class="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white disabled:opacity-20 cursor-pointer text-xs">&darr;</button>
+              <button (click)="editAttribute(a)" title="Modificar este atributo" class="p-1.5 rounded-lg hover:bg-indigo-600/20 text-slate-400 hover:text-indigo-300 transition cursor-pointer text-xs"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" /></svg></button>
+              <button (click)="deleteAttribute(a.id)" title="Eliminar atributo" class="p-1.5 rounded-lg hover:bg-rose-600/20 text-slate-400 hover:text-rose-400 transition cursor-pointer text-xs"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PESTAÑA 2: MÉTODOS                                                  -->
+      <!-- =================================================================== -->
+      <div *ngIf="activeTab() === 'methods'" class="space-y-4">
+        
+        <!-- Formulario para Agregar/Modificar Método -->
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-indigo-300 uppercase tracking-wider flex items-center gap-1.5">
+              <span>{{ methodEditingId() ? 'Modificar Método' : 'Añadir Método / Operación' }}</span>
+            </span>
+            <button 
+              *ngIf="methodEditingId()" 
+              (click)="resetMethodForm()"
+              class="text-[11px] text-slate-400 hover:text-white underline cursor-pointer">
+              Cancelar edición
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 items-end">
+            <!-- Visibilidad Dropdown -->
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Visibilidad</label>
+              <select 
+                [ngModel]="methodVisibility()"
+                (ngModelChange)="methodVisibility.set($event)"
+                class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-mono outline-none focus:border-indigo-500 cursor-pointer">
+                <option *ngFor="let v of VISIBILITIES" [value]="v.symbol">{{ v.label }}</option>
+              </select>
+            </div>
+
+            <!-- Nombre Input -->
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Nombre Método</label>
+              <input 
+                type="text" 
+                [ngModel]="methodName()"
+                (ngModelChange)="methodName.set($event)"
+                placeholder="ej: calcularTotal"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-mono outline-none focus:border-indigo-500" />
+            </div>
+
+            <!-- Parámetros Input -->
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Parámetros (Opcional)</label>
+              <input 
+                type="text" 
+                [ngModel]="methodParameters()"
+                (ngModelChange)="methodParameters.set($event)"
+                placeholder="ej: dto: double"
+                class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-mono outline-none focus:border-indigo-500" />
+            </div>
+
+            <!-- Retorno Dropdown -->
+            <div class="sm:col-span-3">
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Retorno</label>
+              <select 
+                [ngModel]="methodReturnType()"
+                (ngModelChange)="methodReturnType.set($event)"
+                class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-xs font-mono outline-none focus:border-indigo-500 cursor-pointer">
+                <option *ngFor="let r of RETURN_TYPES" [value]="r.value">{{ r.label }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex justify-end pt-1">
+            <button 
+              (click)="saveMethod()"
+              [disabled]="!methodName().trim()"
+              class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-md shadow-indigo-600/20">
+              <span>{{ methodEditingId() ? 'Guardar Modificación' : 'Añadir Método' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Lista de Métodos Actuales -->
+        <div class="space-y-2">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center justify-between px-1">
+            <span>Métodos Definidos ({{ methods().length }})</span>
+          </div>
+
+          <div *ngIf="methods().length === 0" class="p-6 text-center rounded-xl border border-dashed border-slate-800 text-slate-500 text-xs">
+            No hay métodos definidos en esta clase.
+          </div>
+
+          <div *ngFor="let m of methods(); let i = index" 
+            class="p-2.5 rounded-xl bg-slate-800/40 border border-slate-800 hover:border-slate-700 flex items-center justify-between gap-3 transition"
+            [class.ring-1]="methodEditingId() === m.id"
+            [class.ring-indigo-500]="methodEditingId() === m.id">
+            
+            <div class="flex items-center gap-2.5 overflow-hidden">
+              <!-- Badge Visibilidad -->
+              <span class="w-6 h-6 rounded-md flex items-center justify-center text-xs font-mono font-bold"
+                [class.bg-emerald-500/20]="m.visibility === '+'"
+                [class.text-emerald-400]="m.visibility === '+'"
+                [class.bg-rose-500/20]="m.visibility === '-'"
+                [class.text-rose-400]="m.visibility === '-'"
+                [class.bg-amber-500/20]="m.visibility === '#'"
+                [class.text-amber-400]="m.visibility === '#'"
+                [class.bg-blue-500/20]="m.visibility === '~'"
+                [class.text-blue-400]="m.visibility === '~'">
+                {{ m.visibility }}
+              </span>
+
+              <!-- Firma Completa -->
+              <span class="font-mono text-xs font-bold text-slate-200">
+                {{ m.name }}(<span class="text-slate-400 font-normal">{{ m.parameters }}</span>):
+              </span>
+
+              <!-- Badge Retorno -->
+              <span class="px-2 py-0.5 rounded-md bg-slate-900 border border-slate-700 text-emerald-300 font-mono text-[11px]">
+                {{ m.returnType }}
+              </span>
+            </div>
+
+            <!-- Acciones -->
+            <div class="flex items-center gap-1">
+              <button (click)="moveMethod(i, 'up')" [disabled]="i === 0" title="Mover arriba" class="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white disabled:opacity-20 cursor-pointer text-xs">&uarr;</button>
+              <button (click)="moveMethod(i, 'down')" [disabled]="i === methods().length - 1" title="Mover abajo" class="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white disabled:opacity-20 cursor-pointer text-xs">&darr;</button>
+              <button (click)="editMethod(m)" title="Modificar este método" class="p-1.5 rounded-lg hover:bg-indigo-600/20 text-slate-400 hover:text-indigo-300 transition cursor-pointer text-xs"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125" /></svg></button>
+              <button (click)="deleteMethod(m.id)" title="Eliminar método" class="p-1.5 rounded-lg hover:bg-rose-600/20 text-slate-400 hover:text-rose-400 transition cursor-pointer text-xs"><svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =================================================================== -->
+      <!-- PESTAÑA 3: VISTA PREVIA                                             -->
+      <!-- =================================================================== -->
+      <div *ngIf="activeTab() === 'preview'" class="space-y-4">
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3 font-mono text-xs">
+          <div class="text-indigo-400 font-bold border-b border-slate-800 pb-2 flex items-center justify-between">
+            <span>// Vista Previa UML Estándar</span>
+            <span class="text-slate-500 text-[10px]">Entidad: {{ className() }}</span>
+          </div>
+
+          <div class="space-y-1">
+            <div class="text-amber-400 font-bold">class {{ className() }} &#123;</div>
+            
+            <div class="pl-4 text-slate-300">
+              <div class="text-slate-500">// Atributos</div>
+              <div *ngFor="let a of attributes()">
+                {{ a.visibility }} {{ a.name }}: {{ a.type }}
+              </div>
+              <div *ngIf="attributes().length === 0" class="text-slate-600 italic">// Sin atributos</div>
+            </div>
+
+            <div class="pl-4 text-slate-300 pt-2">
+              <div class="text-slate-500">// Métodos</div>
+              <div *ngFor="let m of methods()">
+                {{ m.visibility }} {{ m.name }}({{ m.parameters }}): {{ m.returnType }};
+              </div>
+              <div *ngIf="methods().length === 0" class="text-slate-600 italic">// Sin métodos</div>
+            </div>
+
+            <div class="text-amber-400 font-bold">&#125;</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-indigo-950/40 border border-indigo-800/40 text-xs text-indigo-300 flex items-center gap-2">
+          <svg class="w-4 h-4 text-indigo-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg><span>Esta configuración garantiza compatibilidad formal con JPA Spring Boot 3 y PostgreSQL sin necesidad de ajustes manuales.</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 5. Pie de Acciones del Modal -->
+    <div class="px-6 py-4 bg-slate-900/90 border-t border-slate-800 flex items-center justify-end gap-3">
+      <button 
+        (click)="closeModal()"
+        class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition cursor-pointer">
+        Cancelar
+      </button>
+
+      <button 
+        (click)="applyChanges()"
+        class="px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 hover:scale-[1.02] active:scale-[0.98] transition flex items-center gap-2 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg><span>Guardar Cambios</span>
+      </button>
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,90 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: uml_postgres_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-uml_bd}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-071104}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - uml_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: uml_redis_server
+    restart: always
+    ports:
+      - "6379:6379"
+    networks:
+      - uml_network
+
+  django:
+    build:
+      context: ./backend_ia_colaboracion/
+      dockerfile: Dockerfile
+    container_name: uml_django_backend
+    restart: always
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=${POSTGRES_DB:-uml_bd}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-071104}
+      - POSTGRES_PORT=5432
+      - REDIS_HOST=redis
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             daphne -b 0.0.0.0 -p 8000 diagramador_uml.asgi:application"
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - uml_network
+
+  spring-backend:
+    build:
+      context: ./backend_generador_spring/
+      dockerfile: Dockerfile
+    container_name: uml_spring_backend
+    restart: always
+    environment:
+      - SERVER_PORT=7000
+    ports:
+      - "7000:7000"
+    networks:
+      - uml_network
+
+  angular-app:
+    build:
+      context: ./frontend_diagramador_uml/
+      dockerfile: Dockerfile
+    container_name: uml_angular_frontend
+    restart: always
+    ports:
+      - "4000:4000"
+      - "80:4000"
+    networks:
+      - uml_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  uml_network:
+    driver: bridge

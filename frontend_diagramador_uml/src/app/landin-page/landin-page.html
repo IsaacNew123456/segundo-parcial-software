@@ -1,0 +1,266 @@
+<div class="h-screen w-full bg-slate-950 text-slate-100 flex flex-col justify-between relative selection:bg-indigo-500 selection:text-white font-sans px-4 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 overflow-y-auto md:overflow-hidden">
+  
+  <!-- Ambient Gradient Glow Orbs -->
+  <div class="absolute top-[-80px] left-1/2 -translate-x-1/2 w-[500px] h-[200px] bg-gradient-to-tr from-indigo-600/20 via-blue-600/15 to-purple-600/15 blur-[90px] rounded-full pointer-events-none -z-0"></div>
+  <div class="absolute bottom-[-40px] left-[-40px] w-[250px] h-[200px] bg-blue-600/10 blur-[80px] rounded-full pointer-events-none -z-0"></div>
+  <div class="absolute bottom-[-40px] right-[-40px] w-[250px] h-[200px] bg-purple-600/10 blur-[80px] rounded-full pointer-events-none -z-0"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="w-full max-w-5xl mx-auto flex items-center justify-between relative z-10 shrink-0 pb-2 border-b border-slate-900/60">
+    <div class="flex items-center gap-2">
+      <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-blue-500 p-0.5 shadow-sm shadow-indigo-500/20 flex items-center justify-center">
+        <div class="w-full h-full bg-slate-950 rounded-[7px] flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+      </div>
+      <div>
+        <span class="text-xs sm:text-sm font-black tracking-tight text-white font-['Outfit'] block leading-none">UML STUDIO</span>
+        <span class="text-[8px] sm:text-[9px] tracking-widest uppercase font-mono text-indigo-400 block mt-0.5">CASE EDITION</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2.5">
+      <div class="hidden sm:flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900/80 border border-slate-800 text-[10px] font-mono text-slate-300">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>Colaboración en Tiempo Real</span>
+      </div>
+
+      <!-- Auth Controls -->
+      <ng-container *ngIf="authService.isAuthenticated(); else unauthenticatedTpl">
+        <button 
+          (click)="abrirProyectos()"
+          class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold shadow-md shadow-indigo-600/30 transition hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+          </svg>
+          <span>Mis Proyectos</span>
+        </button>
+
+        <button 
+          (click)="logout()" 
+          title="Cerrar Sesión"
+          class="p-1.5 rounded-lg bg-slate-900 hover:bg-rose-500/10 text-slate-400 hover:text-rose-400 border border-slate-800 transition cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+          </svg>
+        </button>
+      </ng-container>
+
+      <ng-template #unauthenticatedTpl>
+        <button 
+          (click)="openLogin()"
+          class="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-750 text-slate-200 text-xs font-semibold transition hover:border-indigo-500/50 cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+          <span>Iniciar Sesión</span>
+        </button>
+      </ng-template>
+    </div>
+  </header>
+
+  <!-- Main Hero & Actions -->
+  <main class="w-full max-w-4xl mx-auto flex-1 flex flex-col justify-center relative z-10 my-auto py-1 sm:py-2">
+    
+    <!-- Hero Title -->
+    <div class="text-center space-y-1 mb-2.5 sm:mb-3.5 shrink-0">
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-semibold">
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+        </svg>
+        <span>Modelado de Diagramas UML & Generación de Código</span>
+      </div>
+      <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white font-['Outfit'] leading-tight">
+        Diseña, Colabora y Genera <br class="hidden sm:inline" />
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-blue-400 to-teal-300">
+          Código Full-Stack en Segundos
+        </span>
+      </h1>
+      <p class="text-[11px] sm:text-xs text-slate-400 max-w-lg mx-auto leading-normal">
+        Herramienta CASE colaborativa para diagramas de clases, exportación instantánea a Spring Boot 3, Flutter y PostgreSQL.
+      </p>
+    </div>
+
+    <!-- Dual Action Cards (Ultra Compact & Well Aligned) -->
+    <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-3.5">
+      
+      <!-- Action 1: Create Workspace -->
+      <div class="group relative rounded-xl bg-slate-900/80 border border-slate-800 hover:border-indigo-500/50 p-3.5 sm:p-4 flex flex-col justify-between transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/10 backdrop-blur-xl">
+        <div class="flex items-start gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-indigo-600/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 group-hover:scale-105 transition-transform duration-300 shadow-inner shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-sm sm:text-base font-bold text-white font-['Outfit'] group-hover:text-indigo-300 transition-colors leading-snug">
+              Crear Nuevo Diagrama
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5 leading-tight">
+              Inicia un lienzo UML con enlace único para tu equipo.
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-2.5 mt-2.5 border-t border-slate-800/60">
+          <button
+            (click)="crearNuevoLienzo()"
+            class="w-full py-2 px-3 rounded-lg bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs tracking-wide shadow-sm shadow-indigo-600/25 transition-all duration-200 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>Iniciar Nuevo Espacio</span>
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Action 2: Join Workspace -->
+      <div class="group relative rounded-xl bg-slate-900/80 border border-slate-800 hover:border-blue-500/50 p-3.5 sm:p-4 flex flex-col justify-between transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10 backdrop-blur-xl">
+        <div class="flex items-start gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-blue-600/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform duration-300 shadow-inner shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h3 class="text-sm sm:text-base font-bold text-white font-['Outfit'] group-hover:text-blue-300 transition-colors leading-snug">
+              Unirse a Sesión
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5 leading-tight">
+              Ingresa el identificador de la sala para sincronizar.
+            </p>
+          </div>
+        </div>
+
+        <div class="pt-2.5 mt-2.5 border-t border-slate-800/60 space-y-1.5">
+          <div class="relative">
+            <input
+              type="text"
+              [(ngModel)]="joinCode"
+              (keyup.enter)="unirseAlLienzo()"
+              (input)="cerrarAlerta()"
+              placeholder="Ej: c3b5732d-ed1d-43c8-b4f9-3aa96c0eeaac"
+              class="w-full bg-slate-950/80 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white placeholder-slate-500 font-mono focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition shadow-inner"
+            />
+          </div>
+
+          <!-- Mensaje de Error / Alerta Elegante -->
+          <div *ngIf="errorMessage" class="p-1.5 rounded-lg bg-rose-500/10 border border-rose-500/30 text-[10px] text-rose-300 flex items-start gap-1.5 animate-fadeIn">
+            <svg class="w-3 h-3 text-rose-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            <div class="flex-1 leading-tight">{{ errorMessage }}</div>
+            <button (click)="cerrarAlerta()" class="text-rose-400 hover:text-rose-200 cursor-pointer">✕</button>
+          </div>
+
+          <button
+            (click)="unirseAlLienzo()"
+            [disabled]="!joinCode.trim() || isVerifying"
+            class="w-full py-2 px-3 rounded-lg font-bold text-xs tracking-wide transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer"
+            [ngClass]="{
+              'bg-blue-600 hover:bg-blue-500 text-white shadow-sm shadow-blue-600/25 hover:scale-[1.01] active:scale-[0.99]': joinCode.trim() && !isVerifying,
+              'bg-slate-800/50 text-slate-500 border border-slate-800 cursor-not-allowed': !joinCode.trim() || isVerifying
+            }">
+            <span *ngIf="!isVerifying">Conectarse al Lienzo</span>
+            <span *ngIf="isVerifying" class="flex items-center gap-1.5">
+              <svg class="animate-spin h-3 w-3 text-white" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Verificando...
+            </span>
+            <svg *ngIf="!isVerifying" class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Recent Rooms Chips (if any) -->
+    <div *ngIf="recentRooms.length > 0" class="w-full p-2 rounded-lg bg-slate-900/40 border border-slate-800/60 backdrop-blur-md shrink-0 mt-2">
+      <div class="flex items-center gap-1.5 mb-1 text-[10px] font-semibold text-slate-400">
+        <svg class="w-3 h-3 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Salas Guardadas:</span>
+      </div>
+      <div class="flex flex-wrap gap-1">
+        <button
+          *ngFor="let room of recentRooms"
+          (click)="abrirSala(room)"
+          class="px-2 py-0.5 rounded bg-slate-800/80 hover:bg-indigo-600/30 hover:border-indigo-500/50 border border-slate-700/60 text-[10px] font-mono text-slate-300 transition flex items-center gap-1 cursor-pointer">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span>{{ room | slice:0:18 }}...</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Feature Highlights - 4 Distinct Cards (Ultra Compact & Responsive) -->
+    <div class="w-full grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-2.5 mt-2.5 sm:mt-3">
+      <div class="p-2 rounded-lg bg-slate-900/50 border border-slate-800/70 text-center space-y-0.5 hover:border-indigo-500/40 transition-all">
+        <div class="w-5 h-5 mx-auto rounded-md bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+          </svg>
+        </div>
+        <div class="text-[10px] font-bold text-slate-200">Gemini 2.0 AI</div>
+        <div class="text-[9px] text-slate-400">Voz, Texto y Visión</div>
+      </div>
+
+      <div class="p-2 rounded-lg bg-slate-900/50 border border-slate-800/70 text-center space-y-0.5 hover:border-blue-500/40 transition-all">
+        <div class="w-5 h-5 mx-auto rounded-md bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+          </svg>
+        </div>
+        <div class="text-[10px] font-bold text-slate-200">WebSockets P2P</div>
+        <div class="text-[9px] text-slate-400">Sync Multiusuario</div>
+      </div>
+
+      <div class="p-2 rounded-lg bg-slate-900/50 border border-slate-800/70 text-center space-y-0.5 hover:border-emerald-500/40 transition-all">
+        <div class="w-5 h-5 mx-auto rounded-md bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+          </svg>
+        </div>
+        <div class="text-[10px] font-bold text-slate-200">Spring Boot 3</div>
+        <div class="text-[9px] text-slate-400">JPA + Postman ZIP</div>
+      </div>
+
+      <div class="p-2 rounded-lg bg-slate-900/50 border border-slate-800/70 text-center space-y-0.5 hover:border-purple-500/40 transition-all">
+        <div class="w-5 h-5 mx-auto rounded-md bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+          <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+          </svg>
+        </div>
+        <div class="text-[10px] font-bold text-slate-200">Flutter Mobile</div>
+        <div class="text-[9px] text-slate-400">CRUD App en Dart</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="w-full max-w-5xl mx-auto pt-2 border-t border-slate-900 relative z-10 flex flex-col sm:flex-row items-center justify-between gap-1.5 shrink-0 text-slate-500 text-[11px]">
+    <div>
+      <span class="text-slate-300 font-semibold font-['Outfit']">UML Studio</span> &mdash; Plataforma de Modelado y Generación de Código
+    </div>
+    <div class="flex items-center gap-3 text-[10px]">
+      <span class="text-emerald-400 flex items-center gap-1 font-mono">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        Servidor Operativo
+      </span>
+      <span class="text-slate-500 font-mono">PostgreSQL 17 &bull; Spring Boot 3.5 &bull; Angular 20</span>
+    </div>
+  </footer>
+
+  <!-- Modal de Autenticación -->
+  <app-auth-modal *ngIf="showAuthModal()" (close)="closeLogin()" (success)="onAuthSuccess()"></app-auth-modal>
+
+</div>

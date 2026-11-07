@@ -1,0 +1,286 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+  <div class="relative w-full max-w-4xl max-h-[90vh] bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden text-slate-100 font-sans">
+
+    <!-- Modal Header -->
+    <div class="px-6 py-4 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/60">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 p-0.5 shadow-md flex items-center justify-center">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+            </svg>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-base font-bold font-['Outfit'] text-white">Manual Interactivo — UML Studio CASE</h2>
+          <p class="text-xs text-slate-400">Guía de usuario y trazabilidad de arquitectura y casos de uso</p>
+        </div>
+      </div>
+
+      <button 
+        (click)="onClose()"
+        class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="px-6 py-2.5 bg-slate-950/40 border-b border-slate-800/80 flex items-center gap-2 overflow-x-auto custom-scrollbar">
+      <button 
+        (click)="setTab('segundo_parcial')"
+        [class.bg-indigo-600]="activeTab() === 'segundo_parcial'"
+        [class.text-white]="activeTab() === 'segundo_parcial'"
+        [class.text-slate-400]="activeTab() !== 'segundo_parcial'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 transition cursor-pointer shrink-0">
+        🌟 2do Parcial (Sprints 1-4)
+      </button>
+      <button 
+        (click)="setTab('ia_moderadora')"
+        [class.bg-indigo-600]="activeTab() === 'ia_moderadora'"
+        [class.text-white]="activeTab() === 'ia_moderadora'"
+        [class.text-slate-400]="activeTab() !== 'ia_moderadora'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 transition cursor-pointer shrink-0">
+        🤖 IA Moderadora & Comandos
+      </button>
+      <button 
+        (click)="setTab('normalizacion')"
+        [class.bg-indigo-600]="activeTab() === 'normalizacion'"
+        [class.text-white]="activeTab() === 'normalizacion'"
+        [class.text-slate-400]="activeTab() !== 'normalizacion'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 transition cursor-pointer shrink-0">
+        📊 Normalización (1FN-4FN)
+      </button>
+      <button 
+        (click)="setTab('apk_movil')"
+        [class.bg-indigo-600]="activeTab() === 'apk_movil'"
+        [class.text-white]="activeTab() === 'apk_movil'"
+        [class.text-slate-400]="activeTab() !== 'apk_movil'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 transition cursor-pointer shrink-0">
+        📱 APK Espectadora (Móvil)
+      </button>
+      <button 
+        (click)="setTab('primer_parcial')"
+        [class.bg-indigo-600]="activeTab() === 'primer_parcial'"
+        [class.text-white]="activeTab() === 'primer_parcial'"
+        [class.text-slate-400]="activeTab() !== 'primer_parcial'"
+        class="px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-slate-800 transition cursor-pointer shrink-0">
+        ⚙️ 1er Parcial (CU1-CU12)
+      </button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-6 text-sm text-slate-300 custom-scrollbar">
+
+      <!-- TAB: SEGUNDO PARCIAL OVERVIEW -->
+      <div *ngIf="activeTab() === 'segundo_parcial'" class="space-y-4">
+        <div class="p-4 rounded-xl bg-indigo-950/30 border border-indigo-800/40">
+          <h3 class="text-base font-bold text-indigo-300 font-['Outfit'] mb-1">Alcance General del Segundo Parcial</h3>
+          <p class="text-xs text-indigo-200/80 leading-relaxed">
+            La herramienta evoluciona hacia una plataforma con <strong>proyectos colaborativos</strong>, donde la IA actúa como <strong>moderadora activa del chat grupal</strong>, audita la calidad relacional (1FN–4FN), gestiona sesiones con historial inmutable y provee una <strong>APK Android en modo espectador (solo lectura)</strong>.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-indigo-400 block mb-1">Sprint 1: Identidad & Grupos</span>
+            <ul class="list-disc list-inside space-y-1 text-slate-400">
+              <li>Autenticación JWT unificada (web y móvil).</li>
+              <li>Roles: Diseñador (Owner), Colaborador y Espectador.</li>
+              <li>Chat grupal en tiempo real vía WebSockets Channels.</li>
+            </ul>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-indigo-400 block mb-1">Sprint 2: IA Moderadora</span>
+            <ul class="list-disc list-inside space-y-1 text-slate-400">
+              <li>Mutaciones incrementales por chat sin borrar el lienzo.</li>
+              <li>Sugerencia heurística y confirmación explícita.</li>
+              <li>Revisión de anti-patrones y reglas UML estrictas.</li>
+            </ul>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-indigo-400 block mb-1">Sprint 3: Normalización e Historial</span>
+            <ul class="list-disc list-inside space-y-1 text-slate-400">
+              <li>Mapeo UML a esquema relacional (tablas, PKs, FKs).</li>
+              <li>Auditoría asistida 1FN, 2FN, 3FN y 4FN con reporte.</li>
+              <li>Historial de sesiones inmutable con snapshot JSON.</li>
+            </ul>
+          </div>
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-indigo-400 block mb-1">Sprint 4: APK Espectadora Móvil</span>
+            <ul class="list-disc list-inside space-y-1 text-slate-400">
+              <li>Cliente Flutter en modo solo lectura (zoom y desplazamiento).</li>
+              <li>Enforcement estricto en servidor: 403 a toda escritura.</li>
+              <li>Actualizaciones del lienzo y chat en tiempo real.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: IA MODERADORA -->
+      <div *ngIf="activeTab() === 'ia_moderadora'" class="space-y-4">
+        <h3 class="text-base font-bold text-white font-['Outfit']">Comandos y Sintaxis de la IA Moderadora</h3>
+        <p class="text-xs text-slate-400">
+          La IA distingue entre conversación libre y órdenes directas iniciando con <code class="text-indigo-400 font-mono">@ia</code>:
+        </p>
+
+        <div class="space-y-2.5 font-mono text-xs">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="text-emerald-400 font-bold mb-0.5">Crear o Añadir Clase:</div>
+            <code class="text-slate-300">&#64;ia agrega la clase Factura con id, fecha y total</code>
+            <p class="font-sans text-[11px] text-slate-400 mt-1">Crea la clase sin modificar el resto del diagrama respetando coordenadas.</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="text-indigo-400 font-bold mb-0.5">Relacionar Clases:</div>
+            <code class="text-slate-300">&#64;ia relaciona Cliente con Pedido</code>
+            <p class="font-sans text-[11px] text-slate-400 mt-1">Crea la relación y la anuncia en el chat grupal con sus multiplicidades válidas.</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="text-purple-400 font-bold mb-0.5">Sugerir Relaciones (Flujo Seguro):</div>
+            <code class="text-slate-300">&#64;ia sugiere relaciones</code>
+            <p class="font-sans text-[11px] text-slate-400 mt-1">Devuelve lista numerada. Para aplicar una sugerencia: <code class="text-indigo-300">&#64;ia aplica la 1</code>.</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="text-amber-400 font-bold mb-0.5">Revisar Relaciones & Anti-Patrones:</div>
+            <code class="text-slate-300">&#64;ia revisa relaciones</code>
+            <p class="font-sans text-[11px] text-slate-400 mt-1">Detecta clases huérfanas, ciclos de herencia y bloquea multiplicidades en herencia/dependencia.</p>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <div class="text-sky-400 font-bold mb-0.5">Resumen del Lienzo (Accesible por Todos):</div>
+            <code class="text-slate-300">&#64;ia resume el lienzo &bull; &#64;ia ¿qué avanzamos hoy?</code>
+            <p class="font-sans text-[11px] text-slate-400 mt-1">Informa las entidades actuales, relaciones y avance reciente.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: NORMALIZACIÓN -->
+      <div *ngIf="activeTab() === 'normalizacion'" class="space-y-4">
+        <h3 class="text-base font-bold text-white font-['Outfit']">Auditoría Relacional (1FN a 4FN)</h3>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Permite verificar el diseño conceptual frente a las formas normales relacionales antes de generar código para base de datos:
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+            <span class="font-bold text-emerald-400 block">1FN: Primera Forma Normal</span>
+            <p class="text-slate-400">Verifica atomicidad de atributos. Detecta colecciones, listas o campos repetitivos (ej. <code class="text-slate-300">telefonos</code>, <code class="text-slate-300">emails</code>).</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+            <span class="font-bold text-blue-400 block">2FN: Segunda Forma Normal</span>
+            <p class="text-slate-400">Para tablas con clave primaria compuesta, valida que ningún atributo dependa parcialmente de solo una parte de la PK.</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+            <span class="font-bold text-purple-400 block">3FN: Tercera Forma Normal</span>
+            <p class="text-slate-400">Elimina dependencias transitivas entre columnas no clave (ej. <code class="text-slate-300">codigo_postal &rarr; ciudad</code>).</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+            <span class="font-bold text-amber-400 block">4FN: Cuarta Forma Normal</span>
+            <p class="text-slate-400">Evita dependencias multivaluadas independientes en una misma entidad (ej. habilidades e idiomas).</p>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+          <span class="font-bold text-indigo-400">Comando:</span> <code class="text-slate-300">&#64;ia audita normalizacion</code> o accede a la pestaña de auditoría en el proyecto.
+        </div>
+      </div>
+
+      <!-- TAB: APK MOVIL -->
+      <div *ngIf="activeTab() === 'apk_movil'" class="space-y-4">
+        <h3 class="text-base font-bold text-white font-['Outfit']">Cliente Móvil Flutter (Espectador de Solo Lectura)</h3>
+        
+        <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+          <div class="flex items-center gap-2 text-amber-400 font-bold">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+            </svg>
+            <span>Regla Inviolable 1 — El móvil NUNCA escribe en el diagrama</span>
+          </div>
+          <p class="text-slate-400 leading-relaxed">
+            Toda mutación solicitada desde un dispositivo móvil es rechazada por el servidor con código <strong>403 Forbidden</strong>. La APK móvil está diseñada estrictamente para seguimiento, auditoría, consultas a la IA y visualización sincronizada.
+          </p>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">&bull;</span>
+            <span><strong>Mismo usuario y contraseña:</strong> Inicia sesión con la misma cuenta creada en la web.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">&bull;</span>
+            <span><strong>Lienzo en Modo Espectador:</strong> Visualización fluida con zoom y desplazamiento libre (InteractiveViewer), sin controles de edición.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">&bull;</span>
+            <span><strong>Sincronización en Tiempo Real:</strong> Conexión WebSocket a <code class="text-indigo-400">/ws/canvas/&#123;room_id&#125;/</code> que actualiza el diagrama automáticamente cuando otros miembros editan en la web.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">&bull;</span>
+            <span><strong>Chat de Consulta:</strong> Chips rápidos para <code class="text-indigo-400">&#64;ia resume el lienzo</code>, <code class="text-indigo-400">&#64;ia ¿qué avanzamos hoy?</code> y auditoría.</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">&bull;</span>
+            <span><strong>Historial de Sesiones:</strong> Pestaña de historial inmutable con resumen, duración y snapshot de cada sesión.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: PRIMER PARCIAL -->
+      <div *ngIf="activeTab() === 'primer_parcial'" class="space-y-4">
+        <h3 class="text-base font-bold text-white font-['Outfit']">Funcionalidades del Primer Parcial (CU1–CU12)</h3>
+        <p class="text-xs text-slate-400">
+          Todas las capacidades del primer parcial se mantienen 100% operativas y compatibles:
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-white block mb-0.5">CU1–CU3: Gestión del Lienzo</span>
+            <span class="text-slate-400">Creación con UUID v4, edición modal y eliminación reactiva en JointJS.</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-white block mb-0.5">CU4–CU5: Relaciones UML</span>
+            <span class="text-slate-400">5 tipos (Asociación, Herencia, Agregación, Composición, Dependencia) con cardinalidades editables.</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-white block mb-0.5">CU6: Colaboración</span>
+            <span class="text-slate-400">Presencia en vivo y difusión de cambios de bajo retraso vía WebSockets Daphne/Channels.</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-white block mb-0.5">CU7–CU9: Generación de Backend</span>
+            <span class="text-slate-400">Microservicio Spring Boot 3 / Java 21 en 4 capas (Entity, Repo, Service, Controller) + Postman v2.1.</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-white block mb-0.5">CU10: Gemini Vision</span>
+            <span class="text-slate-400">Digitalización automática de fotos de bocetos y pizarras hacia clases UML.</span>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+            <span class="font-bold text-white block mb-0.5">CU12: Interoperabilidad XMI</span>
+            <span class="text-slate-400">Exportación e importación compatible con Enterprise Architect (OMG XMI 2.1).</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-3 border-t border-slate-800/80 bg-slate-950/60 flex items-center justify-between text-xs text-slate-500">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Sistema CASE Integral — 1er & 2do Parcial Completados</span>
+      </div>
+      <button 
+        (click)="onClose()"
+        class="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold transition cursor-pointer">
+        Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>

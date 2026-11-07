@@ -1,0 +1,101 @@
+# ==========================================
+# Secretos y Entornos (CRÍTICO)
+# ==========================================
+*.env
+**/.env
+.env.*
+!.env.example
+!**/.env.example
+*.local
+
+# ==========================================
+# Python / Django (Backend IA & Colaboración)
+# ==========================================
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+venv/
+**/venv/
+env/
+**/env/
+ENV/
+**/ENV/
+*.sqlite3
+
+# ==========================================
+# Node / Angular Frontend
+# ==========================================
+node_modules/
+**/node_modules/
+.angular/
+**/.angular/
+dist/
+**/dist/
+.npm/
+
+# ==========================================
+# Java / Spring Boot Backend
+# ==========================================
+target/
+**/target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+**/.mvn/wrapper/maven-wrapper.jar
+
+# ==========================================
+# Flutter / Dart / Móvil
+# ==========================================
+.dart_tool/
+**/.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+**/build/
+ephemeral/
+**/ephemeral/
+android/app/build/
+**/android/app/build/
+android/.gradle/
+**/android/.gradle/
+local.properties
+**/local.properties
+*.apk
+*.aab
+*.dex
+*.pdb
+*.dll
+*.exe
+
+# ==========================================
+# IDEs y Editores
+# ==========================================
+.vscode/
+**/.vscode/
+.idea/
+**/.idea/
+*.iml
+**/*.iml
+.agents/
+
+# ==========================================
+# Sistema Operativo y Logs
+# ==========================================
+*.log
+**/*.log
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# ==========================================
+# Archivos comprimidos, documentos locales y pruebas temporales
+# ==========================================
+*.zip
+*.tar.gz
+*.rar
+*.docx
+*.pdf
+proyecto_prueba/
+Proyecto de Prueba/
+Proyecto de Prueva/

@@ -1,0 +1,346 @@
+<div class="min-h-screen w-full bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+  
+  <!-- Ambient Lights -->
+  <div class="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[600px] h-[250px] bg-gradient-to-tr from-indigo-600/20 via-blue-600/15 to-purple-600/15 blur-[100px] rounded-full pointer-events-none -z-0"></div>
+
+  <!-- Header -->
+  <header class="w-full border-b border-slate-850 bg-slate-900/60 backdrop-blur-xl sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      
+      <!-- Logo -->
+      <div class="flex items-center gap-3 cursor-pointer" (click)="projectService.loadProjects().subscribe()">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-blue-500 p-0.5 shadow-md flex items-center justify-center">
+          <div class="w-full h-full bg-slate-950 rounded-[9px] flex items-center justify-center">
+            <svg class="w-4 h-4 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+              <polyline points="2 17 12 22 22 17"/>
+              <polyline points="2 12 12 17 22 12"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <span class="text-sm font-black tracking-tight text-white font-['Outfit'] block leading-none">UML STUDIO</span>
+          <span class="text-[9px] tracking-widest uppercase font-mono text-indigo-400 block mt-0.5">Mis Proyectos</span>
+        </div>
+      </div>
+
+      <!-- User Info & Actions -->
+      <div class="flex items-center gap-3">
+        <div *ngIf="authService.currentUser() as user" class="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-slate-850/80 border border-slate-750 text-xs">
+          <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          <span class="font-semibold text-slate-200">{{ user.nombre || user.email }}</span>
+          <span class="text-slate-500 font-mono text-[10px]">({{ user.email }})</span>
+        </div>
+
+        <button 
+          (click)="openManual()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-750 text-indigo-300 text-xs font-semibold border border-indigo-500/20 transition hover:border-indigo-500/40 cursor-pointer">
+          <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span>Manual Interactivo</span>
+        </button>
+
+        <button 
+          (click)="openCreateModal()"
+          class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white text-xs font-bold shadow-md shadow-indigo-600/25 transition hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
+          <span>Nuevo Proyecto</span>
+        </button>
+
+        <button 
+          (click)="logout()" 
+          title="Cerrar Sesión"
+          class="p-2 rounded-xl bg-slate-850 hover:bg-rose-500/10 hover:text-rose-400 border border-slate-750 text-slate-400 transition cursor-pointer">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 flex-1 flex flex-col gap-6">
+    
+    <!-- Title Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div>
+        <h1 class="text-2xl font-black font-['Outfit'] text-white">Espacios de Trabajo UML</h1>
+        <p class="text-xs text-slate-400 mt-1">
+          Gestiona tus proyectos colaborativos, invita a tu equipo con roles específicos y modela con IA moderadora.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button 
+          (click)="projectService.loadProjects().subscribe()"
+          class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-850 border border-slate-800 text-slate-300 text-xs font-medium transition cursor-pointer">
+          <svg class="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+          <span>Actualizar</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="projectService.loading()" class="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
+      <div class="w-8 h-8 border-3 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin"></div>
+      <span class="text-xs font-mono">Cargando proyectos...</span>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!projectService.loading() && projectService.projects().length === 0" 
+      class="py-16 px-4 rounded-2xl bg-slate-900/40 border border-dashed border-slate-800 flex flex-col items-center justify-center text-center gap-4">
+      <div class="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+        <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z" />
+        </svg>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white font-['Outfit']">No tienes proyectos activos aún</h3>
+        <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">
+          Crea tu primer proyecto para comenzar a diseñar diagramas UML colaborativos con moderación de IA.
+        </p>
+      </div>
+      <button 
+        (click)="openCreateModal()"
+        class="py-2 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition cursor-pointer">
+        + Crear Primer Proyecto
+      </button>
+    </div>
+
+    <!-- Projects Grid -->
+    <div *ngIf="!projectService.loading() && projectService.projects().length > 0" 
+      class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      
+      <div *ngFor="let proj of projectService.projects()" 
+        class="group relative rounded-2xl bg-slate-900/80 hover:bg-slate-875 border border-slate-800 hover:border-indigo-500/50 p-5 flex flex-col justify-between transition-all duration-300 shadow-lg hover:shadow-indigo-500/10 backdrop-blur-xl">
+        
+        <div>
+          <!-- Top Row: Role Badge & Members Count -->
+          <div class="flex items-center justify-between gap-2 mb-3">
+            
+            <!-- Badge de Rol -->
+            <span *ngIf="proj.my_role === 'designer'" 
+              class="px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[10px] font-semibold flex items-center gap-1 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>
+              Diseñador
+            </span>
+            <span *ngIf="proj.my_role === 'collaborator'" 
+              class="px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-[10px] font-semibold flex items-center gap-1 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+              Colaborador
+            </span>
+            <span *ngIf="proj.my_role === 'viewer'" 
+              class="px-2.5 py-0.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-[10px] font-semibold flex items-center gap-1 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+              Espectador
+            </span>
+
+            <!-- Miembros Count -->
+            <span class="text-[11px] text-slate-400 flex items-center gap-1 font-mono">
+              <svg class="w-3.5 h-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+              </svg>
+              <span>{{ proj.members_count }} miembro{{ proj.members_count === 1 ? '' : 's' }}</span>
+            </span>
+
+          </div>
+
+          <!-- Project Name -->
+          <h2 class="text-base font-bold text-white font-['Outfit'] group-hover:text-indigo-300 transition leading-snug">
+            {{ proj.nombre }}
+          </h2>
+
+          <!-- Meta -->
+          <div class="mt-2 text-[11px] text-slate-500 flex flex-col gap-1 font-mono">
+            <div>Owner: <span class="text-slate-300">{{ proj.owner.nombre || proj.owner.email }}</span></div>
+            <div class="truncate">Room: <span class="text-indigo-400/80">{{ proj.room_id }}</span></div>
+          </div>
+        </div>
+
+        <!-- Card Footer Actions -->
+        <div class="pt-4 mt-4 border-t border-slate-800/80 flex items-center justify-between gap-2">
+          
+          <button 
+            (click)="openDiagram(proj)"
+            class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs transition shadow-md shadow-indigo-600/20 flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>Abrir Lienzo</span>
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </button>
+
+          <button 
+            (click)="openMembers(proj)"
+            title="Ver / Gestionar Miembros"
+            class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+            </svg>
+          </button>
+
+          <button 
+            (click)="openSessions(proj)"
+            title="Historial de Sesiones"
+            class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition cursor-pointer">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- MODAL: CREAR PROYECTO -->
+  <div *ngIf="showCreateModal()" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+    <div class="w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 text-slate-100 flex flex-col gap-4">
+      <div class="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 class="text-base font-bold font-['Outfit'] text-white">Nuevo Proyecto UML</h3>
+        <button (click)="closeCreateModal()" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-1">
+        <label class="text-xs font-semibold text-slate-300">Nombre del Proyecto</label>
+        <input 
+          type="text" 
+          [ngModel]="newProjectName()"
+          (ngModelChange)="newProjectName.set($event)"
+          (keyup.enter)="createProject()"
+          placeholder="Ej. Sistema de Facturación y Ventas" 
+          class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950/80 border border-slate-800 focus:border-indigo-500 text-xs text-slate-100 placeholder-slate-500 outline-none transition" />
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2">
+        <button 
+          (click)="closeCreateModal()" 
+          class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition cursor-pointer">
+          Cancelar
+        </button>
+        <button 
+          (click)="createProject()" 
+          class="px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition cursor-pointer">
+          Crear y Abrir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: GESTIÓN DE MIEMBROS -->
+  <div *ngIf="showMembersModal() && selectedProject() as proj" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-fadeIn">
+    <div class="w-full max-w-lg rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 text-slate-100 flex flex-col gap-4 max-h-[85vh] overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div>
+          <h3 class="text-base font-bold font-['Outfit'] text-white">Miembros del Proyecto</h3>
+          <p class="text-xs text-slate-400 truncate max-w-sm">{{ proj.nombre }}</p>
+        </div>
+        <button (click)="closeMembersModal()" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <!-- Invite Form (Solo Diseñador) -->
+      <div *ngIf="proj.my_role === 'designer'" class="p-3.5 rounded-xl bg-slate-950/60 border border-slate-800 space-y-2.5">
+        <span class="text-xs font-bold text-indigo-300 font-mono">Invitar Nuevo Miembro</span>
+        
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input 
+            type="email" 
+            [ngModel]="inviteEmail()"
+            (ngModelChange)="inviteEmail.set($event)"
+            placeholder="correo@ejemplo.com"
+            class="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-750 focus:border-indigo-500 text-xs text-slate-100 placeholder-slate-500 outline-none" />
+
+          <select 
+            [ngModel]="inviteRole()"
+            (ngModelChange)="inviteRole.set($event)"
+            class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-750 focus:border-indigo-500 text-xs text-slate-200 outline-none">
+            <option value="collaborator">Colaborador</option>
+            <option value="designer">Diseñador</option>
+            <option value="viewer">Espectador</option>
+          </select>
+
+          <button 
+            (click)="inviteMember()"
+            class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition cursor-pointer">
+            Invitar
+          </button>
+        </div>
+
+        <div *ngIf="inviteError()" class="text-[11px] text-rose-400 mt-1">{{ inviteError() }}</div>
+        <div *ngIf="inviteSuccess()" class="text-[11px] text-emerald-400 mt-1">{{ inviteSuccess() }}</div>
+      </div>
+
+      <!-- Members List -->
+      <div class="space-y-2 overflow-y-auto max-h-60 pr-1 custom-scrollbar">
+        <span class="text-xs font-semibold text-slate-400 font-mono">Miembros Actuales ({{ proj.members.length }})</span>
+        
+        <div *ngFor="let member of proj.members" class="p-2.5 rounded-xl bg-slate-850/80 border border-slate-800 flex items-center justify-between gap-3">
+          <div>
+            <div class="text-xs font-bold text-slate-200">{{ member.user.nombre || member.user.username }}</div>
+            <div class="text-[10px] text-slate-500 font-mono">{{ member.user.email }}</div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <!-- Selector de rol si soy diseñador -->
+            <select 
+              *ngIf="proj.my_role === 'designer' && member.user.id !== proj.owner.id"
+              [value]="member.rol"
+              (change)="changeRole(member.user.id, $event)"
+              class="px-2 py-1 rounded bg-slate-900 border border-slate-750 text-[11px] text-slate-300 outline-none">
+              <option value="designer">Diseñador</option>
+              <option value="collaborator">Colaborador</option>
+              <option value="viewer">Espectador</option>
+            </select>
+
+            <span *ngIf="proj.my_role !== 'designer' || member.user.id === proj.owner.id" class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300">
+              {{ member.rol === 'designer' ? 'Diseñador' : (member.rol === 'collaborator' ? 'Colaborador' : 'Espectador') }}
+            </span>
+
+            <button 
+              *ngIf="proj.my_role === 'designer' && member.user.id !== proj.owner.id"
+              (click)="removeMember(member.user.id)"
+              title="Remover miembro"
+              class="text-rose-400 hover:text-rose-300 p-1 rounded hover:bg-rose-500/10 transition cursor-pointer">
+              &times;
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Close Button -->
+      <div class="pt-2 border-t border-slate-800 flex justify-end">
+        <button 
+          (click)="closeMembersModal()"
+          class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-300 transition cursor-pointer">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- S3-5: Modal de Historial de Sesiones -->
+  <app-sessions-history 
+    *ngIf="showSessionsModal() && sessionsProject()" 
+    [project]="sessionsProject()!" 
+    (close)="closeSessionsModal()">
+  </app-sessions-history>
+
+  <!-- S4-8: Modal de Manual Interactivo -->
+  <app-interactive-manual-modal 
+    *ngIf="showManualModal()" 
+    (close)="closeManual()">
+  </app-interactive-manual-modal>
+
+</div>
