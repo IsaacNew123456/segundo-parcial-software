@@ -122,8 +122,15 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:4200",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
-    "http://localhost:4000"
+    "http://localhost:4000",
+    "http://localhost",
+    "http://127.0.0.1"
 ]
+
+# Permitir orígenes dinámicos si se definen en variables de entorno (ej. en AWS IP)
+extra_csrf = os.getenv("CSRF_TRUSTED_ORIGINS", "")
+if extra_csrf:
+    CSRF_TRUSTED_ORIGINS.extend([o.strip() for o in extra_csrf.split(",") if o.strip()])
 
 
 ROOT_URLCONF = 'diagramador_uml.urls'

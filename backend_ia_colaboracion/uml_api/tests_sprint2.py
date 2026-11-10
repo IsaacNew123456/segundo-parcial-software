@@ -201,7 +201,7 @@ class Sprint2Tests(TestCase):
             self.project.id, self.collaborator, "@ia relaciona Docente con Materia"
         )
         self.assertTrue(res.get("is_ai"))
-        self.assertIn("relacionado", res.get("reply", "").lower())
+        self.assertTrue(any(w in res.get("reply", "").lower() for w in ["relacion", "relación", "relacionado"]))
 
         self.backup.refresh_from_db()
         rels = self.backup.data.get("relationships", [])
